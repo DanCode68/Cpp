@@ -16,6 +16,6 @@ This file requires the public-domain header file "stb_image.h" from https://gith
 
 Currently tested with .jpg and .png files, should be compatible with all the same formats as "stb_image.h"
 
-#ImgPrint.cpp
+# ImgPrint.cpp
 
 Prints ASCII characters to the Windows console representing a grayscale image saved as a text file by ImgConv
