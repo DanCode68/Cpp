@@ -7,6 +7,7 @@
 #include "../args.h"
 #include "../pixel.h"
 
+//https://github.com/nothings/stb
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb_image.h"
 
@@ -28,7 +29,7 @@ int main(int argc, char* argv[])
 	getline(cin, imageName);
 	cout << "\nNew file:\n>> ";
 	getline(cin, newName);
-	cout << "\nPixel components (1 for B/W, 3, for RGB, 4 for RGBA):\n>> ";
+	cout << "\nPixel components (1 for Grayscale, 2 for Grayscale with Alpha, 3, for RGB, 4 for RGB with Alpha):\n>> ";
 	try
 	{
 		cin >> comp;
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
 		comp = compDefault;
 	}
 
-	if (comp != 1 && comp != 3 && comp != 4)
+	if (comp < 1 || comp > 4)
 	{
 		cout << "Error: invalid component value; using default value of " << compDefault << "\n";
 		comp = compDefault;
