@@ -1,6 +1,6 @@
 ImgConv.cpp
 -----------
-Converts an image (jpg, png, tga, bmp, psd, gif, hdr, pic) to a text file containing a matrix of pixel information
+Converts an image to a text file containing a matrix of pixel information
 
 Pixel info format:
 
@@ -13,6 +13,7 @@ Pixel info format:
 #,#,#,# = red,green,blue,alpha
 
 This file requires the public-domain header file "stb_image.h" from https://github.com/nothings/stb
+Currently tested with .jpg and .png files, should be compatible with all the same formats as "stb_image.h"
 
 ImgPrint.cpp
 ------------
