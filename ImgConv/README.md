@@ -1,4 +1,4 @@
-# ImgConv.cpp
+# ImgConv
 
 Converts an image to a text file containing a matrix of pixel information
 
@@ -16,6 +16,6 @@ Requires the public-domain header file "stb_image.h" from https://github.com/not
 
 Currently tested with .jpg and .png files, should be compatible with all the same formats as "stb_image.h"
 
-# ImgPrint.cpp
+# ImgPrint
 
 Prints ASCII characters to the Windows console representing a grayscale image saved as a text file by ImgConv
