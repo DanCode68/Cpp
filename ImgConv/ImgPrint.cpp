@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <fstream>
 
+#include "../case.h"
 #include "../args.h"
 #include "../parsenum.h"
 #include "../split.h"
@@ -12,15 +13,16 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    vector<string> args = GetArgs(argc, argv);
-    bool wideCharMode = find(args.begin(), args.end(), "-s") == args.end() && find(args.begin(), args.end(), "-slim") == args.end();
-	
+    Args args(argc, argv);
+
+    bool wideCharMode = (args.GetParam("slim") != "1" && args.GetParam("s") != "1");
+
 	int pixelBreakpoints[] = {51, 102, 153, 204, 255};
 	int pixelChars[] = {32, 176, 177, 178, 219};
 
     vector<vector<int>> matrix;
 
-    string imageName = "image.txt";
+    string imageName;
 
     string text;
     vector<string> pixelsInRow, componentsInPixel;
@@ -30,9 +32,18 @@ int main(int argc, char* argv[])
     char printChar;
     bool printInConsole = true;
 
-    cout << "Printing in Windows console may not work as expected if the image is too wide.\nIt is recommended to set the console to full-screen mode and use an image with a width of 100 pixels or less.\nThis program can also be run with the parameter \"-slim\" or \"-s\" to display an image horizontally-compressed.\n\nEnter file name: ";
-    cin >> imageName;
-    cout << "\n";
+    cout << "Printing in Windows console may not work as expected if the image is too wide.\nIt is recommended to set the console to full-screen mode and use an image with a width of 100 pixels or less.\nThis program can also be run with the parameter \"-slim\" or \"-s\" to display an image horizontally-compressed.\n\n";
+    
+    if (args.HasParam("file"))
+    {
+        imageName = args.GetParam("file");
+    }
+    else
+    {
+        cout << "Enter file name: ";
+        cin >> imageName;
+        cout << "\n";
+    }
 
     ifstream file;
     file.open(imageName);

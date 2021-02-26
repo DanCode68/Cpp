@@ -4,8 +4,10 @@
 #include <algorithm>
 #include <fstream>
 
+#include "../case.h"
 #include "../args.h"
 #include "../pixel.h"
+#include "../parsenum.h"
 
 //https://github.com/nothings/stb
 #define STB_IMAGE_IMPLEMENTATION
@@ -15,9 +17,10 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	vector<string> args = GetArgs(argc, argv);
+	Args args(argc, argv);
 
 	int width, height, bpp, comp, compDefault = 1;
+	bool hasComp = false;
 
 	uint8_t* image;
 	vector<vector<Pixel>> matrix;
@@ -25,25 +28,56 @@ int main(int argc, char* argv[])
 	string imageName = "image.png";
 	string newName = "image.txt";
 	
-	cout << "Original file:\n>> ";
-	getline(cin, imageName);
-	cout << "\nNew file:\n>> ";
-	getline(cin, newName);
-	cout << "\nPixel components (1 for Grayscale, 2 for Grayscale with Alpha, 3, for RGB, 4 for RGB with Alpha):\n>> ";
-	try
+	if (args.HasParam("src"))
 	{
-		cin >> comp;
+		imageName = args.GetParam("src");
 	}
-	catch(...)
+	else
 	{
-		cout << "Error: invalid component value; using default value of " << compDefault << "\n";
-		comp = compDefault;
+		cout << "Original file:\n>> ";
+		getline(cin, imageName);
 	}
 
-	if (comp < 1 || comp > 4)
+	if (args.HasParam("new"))
 	{
-		cout << "Error: invalid component value; using default value of " << compDefault << "\n";
-		comp = compDefault;
+		newName = args.GetParam("new");
+	}
+	else
+	{
+		cout << "\nNew file:\n>> ";
+		getline(cin, newName);
+	}
+
+	if (args.HasParam("comp"))
+	{
+		try
+		{
+			comp = ParseInt(args.GetParam("comp"));
+
+			if (comp < 1 || comp > 4)
+			{
+				cout << "Error: invalid component value; using default value of " << compDefault << "\n";
+				comp = compDefault;
+			}
+		}
+		catch (...)
+		{
+			cout << "Error: invalid component value; using default value of " << compDefault << "\n";
+			comp = compDefault;
+		}
+	}
+	else
+	{
+		cout << "\nPixel components (1 for Grayscale, 2 for Grayscale with Alpha, 3, for RGB, 4 for RGB with Alpha):\n>> ";
+		try
+		{
+			cin >> comp;
+		}
+		catch(...)
+		{
+			cout << "Error: invalid component value; using default value of " << compDefault << "\n";
+			comp = compDefault;
+		}
 	}
 	
 	ifstream file;
