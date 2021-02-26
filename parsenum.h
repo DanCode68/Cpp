@@ -1,7 +1,7 @@
 #ifndef PARSE_H
 #define PARSE_H
 #include <string>
-#include <math.h>
+#include <cmath>
 bool IsDigit(char c) {return (c >= '0' && c <= '9');}
 bool IsPlus(char c) {return (c == '+');}
 bool IsMinus(char c) {return (c == '-');}
@@ -10,7 +10,7 @@ bool IsDot(char c) {return (c == '.');}
 bool IsInt(std::string s)
 {
 	if (!IsDigit(s[0]) && !IsSign(s[0])) {return false;}
-	for (int i = 1; i < s.length(); i++)
+	for (int i = 1; i < s.length(); ++i)
 	{
 		if (!IsDigit(s[i])) {return false;}
 	}
@@ -32,12 +32,12 @@ bool IsNumber(std::string s)
 {
 	int points = 0;
 	if (!IsDigit(s[0]) && !IsSign(s[0]) && !IsDot(s[0])) {return false;}
-	for (int i = 1; i < s.length(); i++)
+	for (int i = 1; i < s.length(); ++i)
 	{
-		if (IsDot(s[i])) {points++;}
-		if (!IsDigit(s[i]) && !IsDot(s[i])) {return false;}
+		if (IsDot(s[i])) {++points;}
+		if ((!IsDigit(s[i]) && !IsDot(s[i])) || points > 1) {return false;}
 	}
-	return (points <= 1);
+	return true;
 }
 bool IsNumber(int i)
 {
@@ -51,6 +51,18 @@ bool IsNumber(double d)
 {
 	return true;
 }
+bool IsHex(char c)
+{
+	return (IsDigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'));
+}
+bool IsHex(std::string s)
+{
+	for (int i = 0; i < s.length(); ++i)
+	{
+		if (!IsHex(s[i])) {return false;}
+	}
+	return true;
+}
 int ParseInt(char c)
 {
 	if (IsDigit(c)) {return (c - 48);}
@@ -60,7 +72,7 @@ int ParseInt(std::string s)
 {
 	if (!IsInt(s)) {throw "Not an integer";}
 	int result = 0;
-	for (int i = 0; i < s.length(); i++)
+	for (int i = 0; i < s.length(); ++i)
 	{
 		if (IsDigit(s[i])) {result *= 10; result += ParseInt(s[i]);}
 	}
@@ -84,7 +96,7 @@ float ParseFloat(std::string s)
 	if (!IsNumber(s)) {throw "Not a float";}
 	float result = 0, factor = 1;
 	bool fraction = false;
-	for (int i = 0; i < s.length(); i++)
+	for (int i = 0; i < s.length(); ++i)
 	{
 		if (IsDot(s[i])) {fraction = true; continue;}
 		if (!fraction && IsDigit(s[i])) {result *= 10; result += ParseInt(s[i]);}
@@ -110,7 +122,7 @@ double ParseDouble(std::string s)
 	if (!IsNumber(s)) {throw "Not a double";}
 	double result = 0, factor = 1;
 	bool fraction = false;
-	for (int i = 0; i < s.length(); i++)
+	for (int i = 0; i < s.length(); ++i)
 	{
 		if (IsDot(s[i])) {fraction = true; continue;}
 		if (!fraction && IsDigit(s[i])) {result *= 10; result += ParseInt(s[i]);}
@@ -130,5 +142,24 @@ double ParseDouble(float f)
 double ParseDouble(double d)
 {
 	return d;
+}
+int ParseHex(char c)
+{
+	if (!IsHex(c)) {throw "Not a hex char";}
+	if (IsDigit(c)) {return (c - 48);}
+	else if (c >= 'A' && c <= 'F') {return (c - 55);}
+	else if (c >= 'a' && c <= 'f') {return (c - 87);}
+	else {return 0;}
+}
+int ParseHex(std::string s)
+{
+	if (!IsHex(s)) {throw "Not a hex string";}
+	int result = 0;
+	for (int i = 0; i < s.length(); ++i)
+	{
+		result *= 16;
+		result += ParseHex(s[i]);
+	}
+	return result;
 }
 #endif
